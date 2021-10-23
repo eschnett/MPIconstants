@@ -124,13 +124,13 @@ jobs:
         nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix | head
         echo DDD
         nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix |
-            grep " S MPICONSTANTS_COMM_WORLD"
+            grep " [RS] MPICONSTANTS_COMM_WORLD"
         echo EEE
         nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix |
-            grep " S ${symprefix}MPICONSTANTS_COMM_WORLD"
+            grep " [RS] ${symprefix}MPICONSTANTS_COMM_WORLD"
         nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix |
-            grep " S ${symprefix}MPICONSTANTS_COMM_WORLD\$"
+            grep " [RS] ${symprefix}MPICONSTANTS_COMM_WORLD\$"
         nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix |
-            grep " S ${symprefix}MPICONSTANTS_INT\$"
+            grep " [RS] ${symprefix}MPICONSTANTS_INT\$"
         nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix |
-            grep " S ${symprefix}MPICONSTANTS_STATUS_IGNORE\$"
+            grep " [RS] ${symprefix}MPICONSTANTS_STATUS_IGNORE\$"
