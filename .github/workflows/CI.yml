@@ -112,11 +112,11 @@ jobs:
         echo AAA
         # Examine load-time constants
         if [ $(uname) = Darwin ]; then
-            dlsuffix=dylib
-            symtype='S'
+            dlsuffix='dylib'
             symprefix='_'
+            symtype='S'
         else
-            dlsuffix=so
+            dlsuffix='so'
             symprefix=''
             symtype='[DR]'
         fi
@@ -126,7 +126,7 @@ jobs:
         nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} | head
         echo DDD
         nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} |
-            grep " ${symtype} MPICONSTANTS_COMM_WORLD"
+            grep "MPICONSTANTS_COMM_WORLD"
         echo EEE
         nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} |
             grep " ${symtype} ${symprefix}MPICONSTANTS_COMM_WORLD"
