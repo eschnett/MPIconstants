@@ -67,27 +67,25 @@ jobs:
                 -DCMAKE_CXX_COMPILER=mpicxx \
                 -DCMAKE_Fortran_COMPILER=mpif90 \
                 -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-                -DCMAKE_INSTALL_PREFIX=$HOME/mpiwrapper-${{matrix.mpi}}
+                -DCMAKE_INSTALL_PREFIX=$HOME/mpiconstants-${{matrix.mpi}}
             ;;
         macOS)
             case ${{matrix.mpi}} in
             MPICH)
                 # The compiler wrappers have non-standard names
                 cmake -B ${{github.workspace}}/build \
-                    -DCMAKE_CXX_COMPILER=mpicxx-mpich-gcc101 \
-                    -DCMAKE_Fortran_COMPILER=mpifort-mpich-gcc101 \
+                    -DCMAKE_C_COMPILER=mpicc-mpich-gcc101 \
                     -DMPIEXEC_EXECUTABLE=/opt/local/bin/mpiexec-mpich-gcc101 \
                     -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-                    -DCMAKE_INSTALL_PREFIX=$HOME/mpiwrapper-${{matrix.mpi}}
+                    -DCMAKE_INSTALL_PREFIX=$HOME/mpiconstants-${{matrix.mpi}}
                 ;;
             OpenMPI)
                 # The compiler wrappers have non-standard names
                 cmake -B ${{github.workspace}}/build \
-                    -DCMAKE_CXX_COMPILER=mpicxx-openmpi-gcc11 \
-                    -DCMAKE_Fortran_COMPILER=mpifort-openmpi-gcc11 \
+                    -DCMAKE_C_COMPILER=mpicc-openmpi-gcc11 \
                     -DMPIEXEC_EXECUTABLE=/opt/local/bin/mpiexec-openmpi-gcc11 \
                     -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-                    -DCMAKE_INSTALL_PREFIX=$HOME/mpiwrapper-${{matrix.mpi}}
+                    -DCMAKE_INSTALL_PREFIX=$HOME/mpiconstants-${{matrix.mpi}}
                 ;;
             esac
             ;;
