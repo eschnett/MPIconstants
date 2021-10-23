@@ -67,7 +67,7 @@ jobs:
                 -DCMAKE_CXX_COMPILER=mpicxx \
                 -DCMAKE_Fortran_COMPILER=mpif90 \
                 -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-                -DCMAKE_INSTALL_PREFIX=$HOME/mpiconstants-${{matrix.mpi}}
+                -DCMAKE_INSTALL_PREFIX=${HOME}/mpiconstants-${{matrix.mpi}}
             ;;
         macOS)
             case ${{matrix.mpi}} in
@@ -77,7 +77,7 @@ jobs:
                     -DCMAKE_C_COMPILER=mpicc-mpich-gcc10 \
                     -DMPIEXEC_EXECUTABLE=/opt/local/bin/mpiexec-mpich-gcc10 \
                     -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-                    -DCMAKE_INSTALL_PREFIX=$HOME/mpiconstants-${{matrix.mpi}}
+                    -DCMAKE_INSTALL_PREFIX=${HOME}/mpiconstants-${{matrix.mpi}}
                 ;;
             OpenMPI)
                 # The compiler wrappers have non-standard names
@@ -85,7 +85,7 @@ jobs:
                     -DCMAKE_C_COMPILER=mpicc-openmpi-gcc11 \
                     -DMPIEXEC_EXECUTABLE=/opt/local/bin/mpiexec-openmpi-gcc11 \
                     -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-                    -DCMAKE_INSTALL_PREFIX=$HOME/mpiconstants-${{matrix.mpi}}
+                    -DCMAKE_INSTALL_PREFIX=${HOME}/mpiconstants-${{matrix.mpi}}
                 ;;
             esac
             ;;
@@ -104,7 +104,7 @@ jobs:
     - name: Run
       run: |
         # Test generating compile-time constants
-        $HOME/mpiconstants-${{matrix.mpi}}/bin/generate_compile_time_mpi_constants
+        ${HOME}/mpiconstants-${{matrix.mpi}}/bin/generate_compile_time_mpi_constants
         test -f compile_time_mpi_constants.jl
         grep -q 'MPI_MAX_LIBRARY_VERSION_STRING' compile_time_mpi_constants.jl
         grep -q 'MPI_Status' compile_time_mpi_constants.jl
@@ -113,24 +113,26 @@ jobs:
         # Examine load-time constants
         if [ $(uname) = Darwin ]; then
             dlsuffix=dylib
+            symtype='S'
             symprefix='_'
         else
             dlsuffix=so
             symprefix=''
+            symtype='[DR]'
         fi
         echo BBB $dlsuffix $symprefix
-        test -e $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix
+        test -e ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix}
         echo CCC
-        nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix | head
+        nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} | head
         echo DDD
-        nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix |
-            grep " [RS] MPICONSTANTS_COMM_WORLD"
+        nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} |
+            grep " ${symtype} MPICONSTANTS_COMM_WORLD"
         echo EEE
-        nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix |
-            grep " [RS] ${symprefix}MPICONSTANTS_COMM_WORLD"
-        nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix |
-            grep " [RS] ${symprefix}MPICONSTANTS_COMM_WORLD\$"
-        nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix |
-            grep " [RS] ${symprefix}MPICONSTANTS_INT\$"
-        nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix |
-            grep " [RS] ${symprefix}MPICONSTANTS_STATUS_IGNORE\$"
+        nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} |
+            grep " ${symtype} ${symprefix}MPICONSTANTS_COMM_WORLD"
+        nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} |
+            grep " ${symtype} ${symprefix}MPICONSTANTS_COMM_WORLD\$"
+        nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} |
+            grep " ${symtype} ${symprefix}MPICONSTANTS_INT\$"
+        nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} |
+            grep " ${symtype} ${symprefix}MPICONSTANTS_STATUS_IGNORE\$"
