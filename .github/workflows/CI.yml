@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main!]
+
+env:
+  BUILD_TYPE: Debug
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-20.04, macos-11]
+        mpi: [MPICH, OpenMPI]
+
+    runs-on: ${{matrix.os}}
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install ${{matrix.mpi}}
+      run: |
+        case $RUNNER_OS in
+        Linux)
+            case "${{matrix.mpi}}" in
+                MPICH) packages=libmpich-dev;;
+                OpenMPI) packages=libopenmpi-dev;;
+            esac
+            sudo apt-get install $packages
+            ;;
+        macOS)
+            # The Homebrew MPICH doesn't have the `mpi-f08` Fortran
+            # module, but cmake insists on it. We thus use MacPorts
+            # instead.
+
+            # case "${{matrix.mpi}}" in
+            #     MPICH) packages=mpich;;
+            #     OpenMPI) packages=open-mpi;;
+            # esac
+            # brew install $packages
+
+            # Install MacPorts
+            wget https://github.com/macports/macports-base/releases/download/v2.7.1/MacPorts-2.7.1-11-BigSur.pkg
+            sudo /usr/sbin/installer -pkg MacPorts-2.7.1-11-BigSur.pkg -target /
+            rm MacPorts-2.7.1-11-BigSur.pkg
+            echo /opt/local/bin >> $GITHUB_PATH
+            echo /opt/local/sbin >> $GITHUB_PATH
+            export "PATH=/opt/local/bin:/opt/local/sbin:$PATH"
+            sudo port sync
+
+            case "${{matrix.mpi}}" in
+                MPICH) packages='mpich-gcc10 +fortran';;
+                OpenMPI) packages='openmpi-gcc11 +fortran';;
+            esac
+            sudo port install $packages
+            ;;
+        esac
+
+    - name: Configure
+      run: |
+        case $RUNNER_OS in
+        Linux)
+            cmake -B ${{github.workspace}}/build \
+                -DCMAKE_CXX_COMPILER=mpicxx \
+                -DCMAKE_Fortran_COMPILER=mpif90 \
+                -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
+                -DCMAKE_INSTALL_PREFIX=$HOME/mpiwrapper-${{matrix.mpi}}
+            ;;
+        macOS)
+            case ${{matrix.mpi}} in
+            MPICH)
+                # The compiler wrappers have non-standard names
+                cmake -B ${{github.workspace}}/build \
+                    -DCMAKE_CXX_COMPILER=mpicxx-mpich-gcc101 \
+                    -DCMAKE_Fortran_COMPILER=mpifort-mpich-gcc101 \
+                    -DMPIEXEC_EXECUTABLE=/opt/local/bin/mpiexec-mpich-gcc101 \
+                    -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
+                    -DCMAKE_INSTALL_PREFIX=$HOME/mpiwrapper-${{matrix.mpi}}
+                ;;
+            OpenMPI)
+                # The compiler wrappers have non-standard names
+                cmake -B ${{github.workspace}}/build \
+                    -DCMAKE_CXX_COMPILER=mpicxx-openmpi-gcc11 \
+                    -DCMAKE_Fortran_COMPILER=mpifort-openmpi-gcc11 \
+                    -DMPIEXEC_EXECUTABLE=/opt/local/bin/mpiexec-openmpi-gcc11 \
+                    -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
+                    -DCMAKE_INSTALL_PREFIX=$HOME/mpiwrapper-${{matrix.mpi}}
+                ;;
+            esac
+            ;;
+        esac
+
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{env.BUILD_TYPE}}
+
+    - name: Install
+      run: cmake --install ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}

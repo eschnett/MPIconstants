@@ -4,6 +4,9 @@
   CI](https://github.com/eschnett/MPIconstants/actions/workflows/CI.yml/badge.svg)](https://github.com/eschnett/MPIconstants/actions)
 
 Extract compile-time and load-time constants from and MPI library.
+This is useful for libraries or applications that are not written in
+C, C++, or Fortran, and want to link against an MPI library as a
+binary dependency.
 
 For the compile-time constants (e.g. `MPI_VERSION`), an executable
 `generate_compile_time_mpi_constants` is created that outputs their
@@ -30,7 +33,7 @@ This shared library can be loaded via `dlopen`, and the constants
 `MPICONSTANTS_COMM_NULL` etc. can be read to determine the respective
 values.
 
-# Example using `cmake` to build this library
+# Using `cmake` to build this library
 
 ```sh
 rm -rf build $HOME/src/c/MPIstuff/mpiconstants-openmpi
