@@ -109,6 +109,7 @@ jobs:
         grep -q 'MPI_MAX_LIBRARY_VERSION_STRING' compile_time_mpi_constants.jl
         grep -q 'MPI_Status' compile_time_mpi_constants.jl
         grep -q 'MPI_Comm' compile_time_mpi_constants.jl
+        echo AAA
         # Examine load-time constants
         if [ $(uname) = Darwin ]; then
             dlsuffix=dylib
@@ -117,14 +118,19 @@ jobs:
             dlsuffix=so
             symprefix=''
         fi
+        echo BBB $dlsuffix $symprefix
         test -e $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix
+        echo CCC
+        nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix | head
+        echo DDD
         nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix |
-            grep -q " S MPICONSTANTS_COMM_WORLD"
+            grep " S MPICONSTANTS_COMM_WORLD"
+        echo EEE
         nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix |
-            grep -q " S ${symprefix}MPICONSTANTS_COMM_WORLD"
+            grep " S ${symprefix}MPICONSTANTS_COMM_WORLD"
         nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix |
-            grep -q " S ${symprefix}MPICONSTANTS_COMM_WORLD\$"
+            grep " S ${symprefix}MPICONSTANTS_COMM_WORLD\$"
         nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix |
-            grep -q " S ${symprefix}MPICONSTANTS_INT\$"
+            grep " S ${symprefix}MPICONSTANTS_INT\$"
         nm $HOME/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.$dlsuffix |
-            grep -q " S ${symprefix}MPICONSTANTS_STATUS_IGNORE\$"
+            grep " S ${symprefix}MPICONSTANTS_STATUS_IGNORE\$"
