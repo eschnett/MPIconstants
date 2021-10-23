@@ -107,7 +107,7 @@ jobs:
         $HOME/mpiconstants-${{matrix.mpi}}/bin/generate_compile_time_mpi_constants
         test -f compile_time_mpi_constants.jl
         grep 'MPI_MAX_LIBRARY_VERSION_STRING' compile_time_mpi_constants.jl
-        grep 'MPI_status' compile_time_mpi_constants.jl
+        grep 'MPI_Status' compile_time_mpi_constants.jl
         grep 'MPI_Comm' compile_time_mpi_constants.jl
         # Examine load-time constants
         if [ $(uname) = Darwin ]; then
