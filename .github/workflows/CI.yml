@@ -100,3 +100,10 @@ jobs:
 
     - name: Install
       run: cmake --install ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Run
+      run: |
+        $HOME/mpiconstants-${{matrix.mpi}}/bin/generate_compile_time_mpi_constants
+        grep -q 'MPI_MAX_LIBRARY_VERSION_STRING' compile_time_mpi_constants.jl
+        grep -q 'MPI_status' compile_time_mpi_constants.jl
+        grep -q 'MPI_Comm' compile_time_mpi_constants.jl
