@@ -74,8 +74,8 @@ jobs:
             MPICH)
                 # The compiler wrappers have non-standard names
                 cmake -B ${{github.workspace}}/build \
-                    -DCMAKE_C_COMPILER=mpicc-mpich-gcc101 \
-                    -DMPIEXEC_EXECUTABLE=/opt/local/bin/mpiexec-mpich-gcc101 \
+                    -DCMAKE_C_COMPILER=mpicc-mpich-gcc10 \
+                    -DMPIEXEC_EXECUTABLE=/opt/local/bin/mpiexec-mpich-gcc10 \
                     -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
                     -DCMAKE_INSTALL_PREFIX=$HOME/mpiconstants-${{matrix.mpi}}
                 ;;
