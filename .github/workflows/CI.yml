@@ -67,7 +67,7 @@ jobs:
             esac
             sudo port install $packages
             ;;
-        windows-2019)
+        Windows)
             wget https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe
             ./msmpisetup.exe
             ;;
@@ -102,7 +102,7 @@ jobs:
                 ;;
             esac
             ;;
-        windows-2019)
+        Windows)
             cmake -B ${{github.workspace}}/build \
                 -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
                 -DCMAKE_INSTALL_PREFIX=${HOME}/mpiconstants-${{matrix.mpi}}
@@ -111,7 +111,8 @@ jobs:
 
     - name: Build
       shell: bash
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: |
+        cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Test
       working-directory: ${{github.workspace}}/build
