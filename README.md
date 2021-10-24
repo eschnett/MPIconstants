@@ -13,8 +13,8 @@ For the compile-time constants (e.g. `MPI_VERSION`), an executable
 definitions.
 
 For the load-time constants (e.g. `MPI_COMM_WORLD`), a shared library
-`libload_time_mpi_constants.so` is created that contains constants
-holding the respective values.
+`libload_time_mpi_constants.so` is created that defines global
+variables holding the respective values.
 
 Example output from `generate_compile_time_mpi_constants`:
 ```Julia
