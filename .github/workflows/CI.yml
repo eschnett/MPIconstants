@@ -93,7 +93,7 @@ jobs:
         Linux)
             cmake -B ${{github.workspace}}/build \
                 -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-                -DCMAKE_INSTALL_PREFIX=${HOME}/mpiconstants-${{matrix.mpi}}
+                -DCMAKE_INSTALL_PREFIX=${HOME}/mpiconstants
             ;;
         macOS)
             case ${{matrix.mpi}} in
@@ -103,7 +103,7 @@ jobs:
                     -DCMAKE_C_COMPILER=mpicc-mpich-gcc10 \
                     -DMPIEXEC_EXECUTABLE=/opt/local/bin/mpiexec-mpich-gcc10 \
                     -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-                    -DCMAKE_INSTALL_PREFIX=${HOME}/mpiconstants-${{matrix.mpi}}
+                    -DCMAKE_INSTALL_PREFIX=${HOME}/mpiconstants
                 ;;
             OpenMPI)
                 # The compiler wrappers have non-standard names
@@ -111,14 +111,14 @@ jobs:
                     -DCMAKE_C_COMPILER=mpicc-openmpi-gcc11 \
                     -DMPIEXEC_EXECUTABLE=/opt/local/bin/mpiexec-openmpi-gcc11 \
                     -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-                    -DCMAKE_INSTALL_PREFIX=${HOME}/mpiconstants-${{matrix.mpi}}
+                    -DCMAKE_INSTALL_PREFIX=${HOME}/mpiconstants
                 ;;
             esac
             ;;
         Windows)
             cmake -B ${{github.workspace}}/build \
                 -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-                -DCMAKE_INSTALL_PREFIX=${HOME}/mpiconstants-${{matrix.mpi}}
+                -DCMAKE_INSTALL_PREFIX=${HOME}/mpiconstants
             ;;
         esac
 
@@ -140,7 +140,7 @@ jobs:
       shell: bash
       run: |
         # Test generating compile-time constants
-        ${HOME}/mpiconstants-${{matrix.mpi}}/bin/generate_compile_time_mpi_constants
+        ${HOME}/mpiconstants/bin/generate_compile_time_mpi_constants
         test -f compile_time_mpi_constants.jl
         grep -q 'MPI_MAX_LIBRARY_VERSION_STRING' compile_time_mpi_constants.jl
         grep -q 'MPI_Status' compile_time_mpi_constants.jl
@@ -155,10 +155,10 @@ jobs:
             symprefix=''
             symtype='[BDR]'
         fi
-        test -e ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix}
-        nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} |
+        test -e ${HOME}/mpiconstants/lib/libload_time_mpi_constants.${dlsuffix}
+        nm ${HOME}/mpiconstants/lib/libload_time_mpi_constants.${dlsuffix} |
             grep -q " ${symtype} ${symprefix}MPICONSTANTS_COMM_WORLD\$"
-        nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} |
+        nm ${HOME}/mpiconstants/lib/libload_time_mpi_constants.${dlsuffix} |
             grep -q " ${symtype} ${symprefix}MPICONSTANTS_INT\$"
-        nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} |
+        nm ${HOME}/mpiconstants/lib/libload_time_mpi_constants.${dlsuffix} |
             grep -q " ${symtype} ${symprefix}MPICONSTANTS_STATUS_IGNORE\$"
