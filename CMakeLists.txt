@@ -6,6 +6,8 @@ project(
   LANGUAGES C
   )
 
+set(CMAKE_C_STANDARD 11)
+
 find_package(MPI REQUIRED)
 
 add_library(load_time_mpi_constants SHARED
