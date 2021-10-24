@@ -69,8 +69,17 @@ jobs:
             ;;
         Windows)
             # wget https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe
-            curl -o msmpisetup.exe https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe
-            ./msmpisetup.exe
+            # See <https://gist.github.com/scivision/1de4fd6abea9ba6b2d87dc1e86b5d2ce>
+            # Should we use <https://github.com/mpi4py/setup-mpi> instead?
+            echo AAA
+            curl -L -O https://download.microsoft.com/download/a/5/2/a5207ca5-1203-491a-8fb8-906fd68ae623/msmpisetup.exe
+            echo BBB
+            ./msmpisetup.exe -unattend -force
+            echo CCC
+            Test-Path "C:/Program Files/Microsoft MPI/Bin/mpiexec.exe" -PathType leaf
+            echo DDD
+            echo "C:/Program Files/Microsoft MPI/Bin/" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+            echo EEE
             ;;
         esac
 
