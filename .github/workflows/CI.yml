@@ -149,7 +149,7 @@ jobs:
         if [ $(uname) = Darwin ]; then
             dlsuffix='dylib'
             symprefix='_'
-            symtype='S'
+            symtype='[DS]'
         else
             dlsuffix='so'
             symprefix=''
