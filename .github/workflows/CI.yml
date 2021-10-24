@@ -74,6 +74,7 @@ jobs:
         esac
 
     - name: Configure
+      shell: bash
       run: |
         case $RUNNER_OS in
         Linux)
@@ -109,16 +110,20 @@ jobs:
         esac
 
     - name: Build
+      shell: bash
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Test
       working-directory: ${{github.workspace}}/build
+      shell: bash
       run: ctest -C ${{env.BUILD_TYPE}}
 
     - name: Install
+      shell: bash
       run: cmake --install ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    - name: Run
+    - name: Test
+      shell: bash
       run: |
         # Test generating compile-time constants
         ${HOME}/mpiconstants-${{matrix.mpi}}/bin/generate_compile_time_mpi_constants
