@@ -157,12 +157,6 @@ jobs:
         fi
         test -e ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix}
         nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} |
-            grep "MPICONSTANTS_COMM_WORLD\$"
-        nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} |
-            grep "MPICONSTANTS_INT\$"
-        nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} |
-            grep "MPICONSTANTS_STATUS_IGNORE\$"
-        nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} |
             grep -q " ${symtype} ${symprefix}MPICONSTANTS_COMM_WORLD\$"
         nm ${HOME}/mpiconstants-${{matrix.mpi}}/lib/libload_time_mpi_constants.${dlsuffix} |
             grep -q " ${symtype} ${symprefix}MPICONSTANTS_INT\$"
