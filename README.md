@@ -2,7 +2,7 @@
 
 * [![GitHub
   CI](https://github.com/eschnett/MPIconstants/actions/workflows/CI.yml/badge.svg)](https://github.com/eschnett/MPIconstants/actions)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6174564.svg)](https://doi.org/10.5281/zenodo.6174564)
+* [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6174564.svg)](https://doi.org/10.5281/zenodo.6174564)
 
 Extract compile-time and load-time constants from and MPI library.
 This is useful for libraries or applications that are not written in
