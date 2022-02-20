@@ -10,7 +10,7 @@
   ],
     "description": "Extract compile-time and load-time constants from and MPI library. This is useful for libraries or applications that are not written in C, C++, or Fortran, and want to link against an MPI library as a binary dependency.",
   "license": "MIT",
-  "doi": "",
+  "doi": "10.5281/zenodo.6174564",
   "keywords": [
     "MPI",
     "distributed computing",

@@ -2,6 +2,7 @@
 
 * [![GitHub
   CI](https://github.com/eschnett/MPIconstants/actions/workflows/CI.yml/badge.svg)](https://github.com/eschnett/MPIconstants/actions)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.6174564.svg)](https://doi.org/10.5281/zenodo.6174564)
 
 Extract compile-time and load-time constants from and MPI library.
 This is useful for libraries or applications that are not written in
@@ -32,6 +33,14 @@ const MPI_Comm MPICONSTANTS_COMM_WORLD;
 This shared library can be loaded via `dlopen`, and the constants
 `MPICONSTANTS_COMM_NULL` etc. can be read to determine the respective
 values.
+
+# Thinking about new names
+
+Should we rename things to sound more uniform? Maybe:
+
+- Project: `getmpiabi`
+- Executable: `getmpiabi1`
+- Shared library: `getmpiabi2`
 
 # Using `cmake` to build this library
 
